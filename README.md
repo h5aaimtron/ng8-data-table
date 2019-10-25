@@ -1,24 +1,112 @@
-# DataTable
+## Installation
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.0.
+``` sh
+npm i ng8-data-table --save
+```
 
-## Code scaffolding
+## Usage example
 
-Run `ng generate component component-name --project dataTable` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project dataTable`.
-> Note: Don't forget to add `--project dataTable` or else it will be added to the default project in your `angular.json` file. 
+### AppModule.ts
 
-## Build
+``` typescript
+import { NgModule } from '@angular/core';
+...
+import { DataTableModule } from 'data-table';
 
-Run `ng build dataTable` to build the project. The build artifacts will be stored in the `dist/` directory.
+@NgModule({
+    imports: [
+        ...
+        DataTableModule
+    ],
+    ...
+})
+export class AppModule {
 
-## Publishing
+}
+```
 
-After building your library with `ng build dataTable`, go to the dist folder `cd dist/data-table` and run `npm publish`.
+### AppComponent.html
 
-## Running unit tests
+``` html
 
-Run `ng test dataTable` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<table class="table table-striped" [data]="data" #table="dataTable" [rowsOnPage]="5" sortBy="name" sortOrder="asc">
+    <thead>
+    <tr>
+        <th>
+            <ng8-sorter by="name">Name</n8-sorter>
+        </th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>City</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of table.data">
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td class="text-right">{{ item.age }}</td>
+        <td>{{ item.city | uppercase }}</td>
+    </tr>
+    </tbody>
+</table>
+---
 
-## Further help
+# Pagination Snippet
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+--- html
+<ng8-pagination [rowsOnPageSet]="[5, 10, 25]" [dataTable]="table"></ng8-pagination>
+---
+
+# Load More Snippet
+
+--- html
+<div class="row">
+  <div class="col-lg-12 d-flex justify-content-center">
+    <button class="btn btn-primary" (click)="table.setPage(1, table.rowsOnPage + 10)">Load More</button>
+  </div>
+</div>
+```
+
+## API
+
+### `data` directive
+
+- selector: `table[data]`
+- exportAs: `dataTable`
+- inputs
+  - `data: any[]` - array of data to display in table
+  - `rowsOnPage: number` - number of rows should be displayed on page (default: 1000)
+  - `activePage: number` - page number (default: 1)
+  - `sortBy: any` - sort by parameter
+  - `sortOrder: string` - sort order parameter, "asc" or "desc"
+- outputs
+  - `sortByChange: any` - sort by parameter
+  - `sortOrderChange: any` - sort order parameter
+
+### `n8-sorter` component
+
+- selector: `ng8-sorter`
+- inputs
+  - `sortBy: any` - specify how to sort data (argument for lodash function [_.sortBy ](https://lodash.com/docs#sortBy))
+
+### `ng8-pagination` component
+
+Displays buttons for changing current page and number of displayed rows (css for bootstrap is required). If array length is smaller than current displayed rows on page then it doesn't show button for changing page. If array length is smaller than min value rowsOnPage then it doesn't show any buttons.
+
+- selector: `ng8-pagination`
+- inputs
+  - `rowsOnPageSet: number` - specify values for buttons to change number of diplayed rows
+
+### `filterBy` directive
+
+In-Progress feature to play with. Appears to work but still structuring the code. Applies an OR filter (John Doe OR Test Name)
+
+``` html
+    <select class="form-control selectpicker" [(ngModel)]="nameFilter"
+        (ngModelChange)="dataFilter.filterValue = nameFilter; dataFilter.filter()" multiple filterBy="name"
+        #dataFilter="dataFilter" [filterValue]="nameFilter">
+        <option value="" selected>Select Filter</option>
+        <option value="John Doe">John Doe</option>
+        <option value="Test Name">Test Name</option>
+    </select>
+---

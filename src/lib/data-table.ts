@@ -3,23 +3,38 @@ import * as _ from 'lodash';
 import { ReplaySubject } from 'rxjs';
 import { SortEvent } from './interfaces/sort-event';
 import { PageEvent } from './interfaces/page-event';
+import { FilterEvent } from './interfaces/filter-event';
 
 
 @Directive({
-    selector: 'table[ngData]',
+    selector: 'table[data]',
     exportAs: 'dataTable'
 })
 export class DataTable implements OnChanges, DoCheck {
 
     private diff: IterableDiffer<any>;
 
-    @Input("ngData") public inputData: any[] = [];
+    @Input("data") public inputData: any[] = [];
 
+    /**
+     * Sorting 
+     */
     @Input("sortBy") public sortBy: string | string[] = "";
     @Input("sortOrder") public sortOrder = "asc";
     @Output("sortByChange") public sortByChange = new EventEmitter<string | string[]>();
     @Output("sortOrderChange") public sortOrderChange = new EventEmitter<string>();
 
+    /**
+     * Filtering
+     */
+    @Input("filterBy") public filterBy: string;
+    @Input("filterValue") public filterValue: string[] = [];
+    @Output("filterByChange") public filterByChange = new EventEmitter<string | string[]>();
+    @Output("filterValueChange") public filtervalueChange = new EventEmitter<string | string[]>();
+
+    /**
+     * Paging
+     */
     @Input("rowsOnPage") public rowsOnPage = 1000;
     @Input("activePage") public activePage = 1;
 
@@ -29,9 +44,25 @@ export class DataTable implements OnChanges, DoCheck {
 
     public onSortChange = new ReplaySubject<SortEvent>(1);
     public onPageChange = new EventEmitter<PageEvent>();
+    public onFilterChange = new EventEmitter<FilterEvent>();
 
     public constructor(private differs: IterableDiffers) {
         this.diff = differs.find([]).create(null);
+    }
+
+    public getFilter(): FilterEvent {
+        return { filterBy: this.filterBy, value: this.filterValue };
+    }
+
+    public setFilter(filterBy: string, filterValue: string[]) {
+        if (this.filterBy !== filterBy || this.filterValue !== filterValue) {
+            this.filterBy = filterBy;
+            this.filterValue = filterValue;
+            this.mustRecalculateData = true;
+            this.onFilterChange.next({ filterBy: filterBy, value: filterValue });
+            this.filterByChange.emit(this.filterBy);
+            this.filtervalueChange.emit(this.filterValue);
+        }
     }
 
     public getSort(): SortEvent {
@@ -85,6 +116,12 @@ export class DataTable implements OnChanges, DoCheck {
     }
 
     public ngOnChanges(changes: { [key: string]: SimpleChange }): any {
+        if (changes["filterBy"] || changes["filterValue"]) {
+            if (this.filterBy) {
+                this.onFilterChange.next({ filterBy: this.filterBy, value: this.filterValue });
+            }
+            this.mustRecalculateData = true;
+        }
         if (changes["rowsOnPage"]) {
             this.rowsOnPage = changes["rowsOnPage"].previousValue;
             this.setPage(this.activePage, changes["rowsOnPage"].currentValue);
@@ -120,11 +157,28 @@ export class DataTable implements OnChanges, DoCheck {
     }
 
     private fillData(): void {
+        let data = this.inputData;
+        console.log(data);
+        // Filter Code
+        var filterBy = this.filterBy;
+        if (typeof filterBy === 'string' && filterBy.length > 0 && this.filterValue.length > 0) {
+            console.log("Filter Code Executed.");
+            console.log("FilterBy: " + this.filterBy);
+            console.log("Filter Values: " + this.filterValue);
+            data = data.filter(item => {
+                return this.filterValue.includes(item[this.filterBy]);
+            });
+
+            console.log(data);
+        }
+
+        // Paging Sets
         this.activePage = this.activePage;
         this.rowsOnPage = this.rowsOnPage;
 
+
+        // Sort Code
         let offset = (this.activePage - 1) * this.rowsOnPage;
-        let data = this.inputData;
         var sortBy = this.sortBy;
         if (typeof sortBy === 'string' || sortBy instanceof String) {
             data = _.orderBy(data, this.caseInsensitiveIteratee(<string>sortBy), [this.sortOrder]);

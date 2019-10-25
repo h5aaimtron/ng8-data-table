@@ -1,6 +1,24 @@
 {
-  "name": "data-table",
-  "version": "0.0.1",
+  "name": "ng8-data-table",
+  "version": "0.0.5",
+  "author": "Scott Ladd",
+  "description": "Simplified DataTable for Angular 8",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/h5aaimtron/ng8-data-table.git"
+  },
+  "bugs": {
+    "url": "https://github.com/h5aaimtron/ng8-data-table/issues"
+  },
+  "homepage": "https://github.com/h5aaimtron/ng8-data-table",
+  "keywords": [
+    "angular",
+    "javascript",
+    "datatables",
+    "directive",
+    "typescript"
+  ],
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0"

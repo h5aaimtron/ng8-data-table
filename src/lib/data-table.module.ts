@@ -5,15 +5,16 @@ import { DataTable } from './data-table';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PaginateComponent } from './components/paginate/paginate.component';
 import { SorterComponent } from './components/sorter/sorter.component';
+import { DataFilterDirective } from './directives/data-filter.directive';
 
 
 
 @NgModule({
-  declarations: [DataTable, PaginationComponent, PaginateComponent, SorterComponent],
+  declarations: [DataTable, PaginationComponent, PaginateComponent, SorterComponent, DataFilterDirective],
   imports: [
     BrowserModule,
     CommonModule
   ],
-  exports: [DataTable, PaginationComponent, SorterComponent]
+  exports: [DataTable, PaginationComponent, SorterComponent, DataFilterDirective]
 })
 export class DataTableModule { }
