@@ -1,22 +1,26 @@
+## Demo
+
+https://h5aaimtron.github.io//demo-ng8-data-table/ng8DataTableDemo/#
+
 ## Installation
 
 ``` sh
 npm i ng8-data-table --save
 ```
 
-## Usage example
+## Usage Examples
 
 ### AppModule.ts
 
 ``` typescript
 import { NgModule } from '@angular/core';
 ...
-import { DataTableModule } from 'data-table';
+import { Ng8DataTableModule } from 'ng8-data-table';
 
 @NgModule({
     imports: [
         ...
-        DataTableModule
+        Ng8DataTableModule
     ],
     ...
 })
@@ -25,15 +29,20 @@ export class AppModule {
 }
 ```
 
-### AppComponent.html
+### Any Component.ts import
+
+``` typescript
+import { Ng8DataTableDirective } from 'ng8-data-table/lib/directives/ng8-data-table.directive';
+```
+
+## Table with Pagination
 
 ``` html
-
-<table class="table table-striped" [data]="data" #table="dataTable" [rowsOnPage]="5" sortBy="name" sortOrder="asc">
+<table class="table table-striped" ng8DataTable [data]="data" #table="ng8DataTable" [rowsOnPage]="5" sortBy="name" sortOrder="asc">
     <thead>
     <tr>
         <th>
-            <ng8-sorter by="name">Name</n8-sorter>
+            <ng8-column-sorter by="name">Name</n8-column-sorter>
         </th>
         <th>Email</th>
         <th>Age</th>
@@ -49,17 +58,38 @@ export class AppModule {
     </tr>
     </tbody>
 </table>
----
-
-# Pagination Snippet
-
---- html
 <ng8-pagination [rowsOnPageSet]="[5, 10, 25]" [dataTable]="table"></ng8-pagination>
----
+```
 
-# Load More Snippet
+## Table with Load More
 
---- html
+``` html
+<table class="table table-striped" ng8DataTable [data]="data" #table="ng8DataTable" [rowsOnPage]="5" sortBy="name" sortOrder="asc">
+    <thead>
+        <tr>
+            <th>
+              <ng8-column-sorter sortBy="name">Name</ng8-column-sorter>
+            </th>
+            <th>
+              <ng8-column-sorter sortBy="email">Email</ng8-column-sorter>
+            </th>
+            <th>
+              <ng8-column-sorter sortBy="age">Age</ng8-column-sorter>
+            </th>
+            <th>
+              <ng8-column-sorter sortBy="city">City</ng8-column-sorter>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of table.data">
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td class="text-right">{{ item.age }}</td>
+        <td>{{ item.city | uppercase }}</td>
+    </tr>
+    </tbody>
+</table>
 <div class="row">
   <div class="col-lg-12 d-flex justify-content-center">
     <button class="btn btn-primary" (click)="table.setPage(1, table.rowsOnPage + 10)">Load More</button>
@@ -71,8 +101,8 @@ export class AppModule {
 
 ### `data` directive
 
-- selector: `table[data]`
-- exportAs: `dataTable`
+- selector: `ng8-data-table`
+- exportAs: `ng8DataTable`
 - inputs
   - `data: any[]` - array of data to display in table
   - `rowsOnPage: number` - number of rows should be displayed on page (default: 1000)
@@ -83,9 +113,9 @@ export class AppModule {
   - `sortByChange: any` - sort by parameter
   - `sortOrderChange: any` - sort order parameter
 
-### `n8-sorter` component
+### `ng8-column-sorter` component
 
-- selector: `ng8-sorter`
+- selector: `ng8-column-sorter`
 - inputs
   - `sortBy: any` - specify how to sort data (argument for lodash function [_.sortBy ](https://lodash.com/docs#sortBy))
 
@@ -97,16 +127,24 @@ Displays buttons for changing current page and number of displayed rows (css for
 - inputs
   - `rowsOnPageSet: number` - specify values for buttons to change number of diplayed rows
 
-### `filterBy` directive
+### `ng8-data-filter` directive
 
-In-Progress feature to play with. Appears to work but still structuring the code. Applies an OR filter (John Doe OR Test Name)
+- selector: `ng8-data-filter`
+- inputs
+    - `filterBy: string` - specify the field name to be filtered.
+    - `filterValue: string[]` - specify an array of strings containing acceptable OR filters.
 
 ``` html
     <select class="form-control selectpicker" [(ngModel)]="nameFilter"
-        (ngModelChange)="dataFilter.filterValue = nameFilter; dataFilter.filter()" multiple filterBy="name"
-        #dataFilter="dataFilter" [filterValue]="nameFilter">
+        (ngModelChange)="dataFilter.filterValue = nameFilter; dataFilter.filter()" ng8-data-filter multiple filterBy="name"
+        #dataFilter="ng8DataFilter" [filterValue]="nameFilter">
         <option value="" selected>Select Filter</option>
         <option value="John Doe">John Doe</option>
         <option value="Test Name">Test Name</option>
     </select>
----
+```
+
+## Change Log
+
+- Simplified packaging / installation
+- Made directive naming more consistent

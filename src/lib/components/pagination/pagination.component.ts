@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import * as _ from 'lodash';
-import { DataTable } from '../../data-table';
+import { Ng8DataTableDirective } from '../../directives/ng8-data-table.directive';
 
 @Component({
   selector: 'ng8-pagination',
@@ -10,17 +10,15 @@ import { DataTable } from '../../data-table';
 export class PaginationComponent implements OnChanges {
   @Input() rowsOnPageSet = [];
   @Input() 
-  set dataTable(val: DataTable) {
+  set dataTable(val: Ng8DataTableDirective) {
     this._table = val;
-    console.log("Set DataTable");
-    console.log(val);
   }
   
   get dataTable() {
     return this._table;
   }
   
-  private _table: DataTable;
+  private _table: Ng8DataTableDirective;
 
   public minRowsOnPage = 0;
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChange, Optional } from '@angular/core';
-import { DataTable } from '../../data-table';
+import { Ng8DataTableDirective } from '../../directives/ng8-data-table.directive';
 import { PageEvent } from '../../interfaces/page-event';
 
 @Component({
@@ -8,15 +8,15 @@ import { PageEvent } from '../../interfaces/page-event';
   styleUrls: ['./paginate.component.css']
 })
 export class PaginateComponent implements OnChanges {
-  @Input() dataTable: DataTable;
-  private _table: DataTable
+  @Input() dataTable: Ng8DataTableDirective;
+  private _table: Ng8DataTableDirective
 
   public activePage: number;
   public rowsOnPage: number;
   public dataLength: number = 0;
   public lastPage: number;
 
-  constructor(@Optional() private injectedTable: DataTable) { }
+  constructor(@Optional() private injectedTable: Ng8DataTableDirective) { }
 
   ngOnChanges(changes: { [key: string]: SimpleChange }) {
     this._table = this.dataTable || this.injectedTable;

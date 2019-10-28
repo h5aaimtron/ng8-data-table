@@ -1,16 +1,15 @@
 import { Directive, Input } from '@angular/core';
-import { DataTable } from '../data-table';
 import { FilterEvent } from '../interfaces/filter-event';
+import { Ng8DataTableDirective } from './ng8-data-table.directive';
 
 @Directive({
-  selector: '[filterBy]',
-  exportAs: 'dataFilter'
+  selector: '[ng8-data-filter]'
 })
 export class DataFilterDirective {
   @Input() filterBy: string = "";
   @Input() filterValue: string[] = [];
 
-  constructor(private dataTable: DataTable) {
+  constructor(private dataTable: Ng8DataTableDirective) {
     this.dataTable.onFilterChange.subscribe((event: FilterEvent) => {
       
     });
@@ -22,5 +21,4 @@ export class DataFilterDirective {
     console.log(this.filterValue);
     this.dataTable.setFilter(this.filterBy, this.filterValue);
   }
-
 }

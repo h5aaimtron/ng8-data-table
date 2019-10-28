@@ -1,20 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DataTable } from '../../data-table';
+import { Ng8DataTableDirective } from '../../directives/ng8-data-table.directive';
 import { SortEvent } from '../../interfaces/sort-event';
 
-
 @Component({
-  selector: 'ng8-sorter',
-  templateUrl: './sorter.component.html',
-  styleUrls: ['./sorter.component.css']
+  selector: 'ng8-column-sorter',
+  templateUrl: './column-sorter.component.html',
+  styleUrls: ['./column-sorter.component.css']
 })
-export class SorterComponent implements OnInit {
+export class ColumnSorterComponent implements OnInit {
   @Input() sortBy: string;
 
   public isSortedByMeAsc: boolean = false;
   public isSortedByMeDesc: boolean = false;
 
-  public constructor(private dataTable: DataTable) { }
+  public constructor(private dataTable: Ng8DataTableDirective) { }
 
   public ngOnInit(): void {
     this.dataTable.onSortChange.subscribe((event: SortEvent) => {
@@ -24,6 +23,8 @@ export class SorterComponent implements OnInit {
   }
 
   public sort() {
+    console.log(this.sortBy);
+    console.log("Asc: " + this.isSortedByMeAsc);
     if (this.isSortedByMeAsc) {
       this.dataTable.setSort(this.sortBy, "desc");
     } else {
