@@ -157,7 +157,6 @@ export class Ng8DataTableDirective implements OnChanges, DoCheck {
 
   private fillData(): void {
     let data = this.inputData;
-    console.log(data);
     // Filter Code
     var filterBy = this.filterBy;
     if (typeof filterBy === 'string' && filterBy.length > 0 && this.filterValue.length > 0) {
@@ -165,11 +164,10 @@ export class Ng8DataTableDirective implements OnChanges, DoCheck {
       console.log("FilterBy: " + this.filterBy);
       console.log("Filter Values: " + this.filterValue);
       data = data.filter(item => {
-        return item[this.filterBy].includes(this.filterValue);
+        return String(item[this.filterBy]).includes(this.filterValue[0]);
+        //return item[this.filterBy].includes(this.filterValue);
         //return this.filterValue.includes(item[this.filterBy]);
       });
-
-      console.log(data);
     }
 
     // Paging Sets
