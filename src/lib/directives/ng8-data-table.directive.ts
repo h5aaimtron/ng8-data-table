@@ -160,9 +160,6 @@ export class Ng8DataTableDirective implements OnChanges, DoCheck {
     // Filter Code
     var filterBy = this.filterBy;
     if (typeof filterBy === 'string' && filterBy.length > 0 && this.filterValue.length > 0) {
-      console.log("Filter Code Executed.");
-      console.log("FilterBy: " + this.filterBy);
-      console.log("Filter Values: " + this.filterValue);
       data = data.filter(item => {
         return String(item[this.filterBy]).includes(this.filterValue[0]);
         //return item[this.filterBy].includes(this.filterValue);
