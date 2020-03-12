@@ -160,10 +160,11 @@ export class Ng8DataTableDirective implements OnChanges, DoCheck {
     // Filter Code
     var filterBy = this.filterBy;
     if (typeof filterBy === 'string' && filterBy.length > 0 && this.filterValue.length > 0) {
+      let searchString: string = String(this.filterValue);
       data = data.filter(item => {
-        return String(item[this.filterBy]).includes(this.filterValue[0]);
-        //return item[this.filterBy].includes(this.filterValue);
-        //return this.filterValue.includes(item[this.filterBy]);
+        if(String(item[this.filterBy]).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) {
+          return item;
+        }
       });
     }
 
