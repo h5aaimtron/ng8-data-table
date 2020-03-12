@@ -146,5 +146,7 @@ Displays buttons for changing current page and number of displayed rows (css for
 
 ## Change Log
 
+- Added dropdown filter support
+- Fixed filtering to support other types.
 - Simplified packaging / installation
 - Made directive naming more consistent
